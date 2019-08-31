@@ -8,15 +8,19 @@ def load_staging_tables(cur, conn):
     Loads the staging tables for ETL process.
 
     Input:
-        cur - 
-        conn - 
+        cur - cursor connection for db
+        conn - connection for db
     Returns:
         None
     """
 
     for query in copy_table_queries:
-        cur.execute(query)
-        conn.commit()
+        try:
+            cur.execute(query)
+            conn.commit()
+        except psycopg2.Error as e:
+            print(e)
+            conn.close()
 
 
 def insert_tables(cur, conn):
@@ -24,15 +28,19 @@ def insert_tables(cur, conn):
     Insert data into each table.
 
     Input:
-        cur - 
-        conn - 
+        cur - cursor connection for db
+        conn - connection for db
     Returns:
         None
     """
 
-    for query in insert_table_queries:
-        cur.execute(query)
-        conn.commit()
+    for query in copy_table_queries:
+        try:
+            cur.execute(query)
+            conn.commit()
+        except psycopg2.Error as e:
+            print(e)
+            conn.close()
 
 
 def main():
